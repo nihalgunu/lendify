@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         const db = await open({
-            filename: './database.sqlite', // Adjusted path to correctly reference the SQLite database file
+            filename: './database.sqlite',
             driver: sqlite.Database,
         });
 
