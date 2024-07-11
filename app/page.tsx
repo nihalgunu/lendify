@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Register from "./components/login/Register";
+import LoginGUI from "./components/login/LoginGUI";
 import Navbar from "./components/navbar/Navbar";
 
 export default function Home() {
@@ -8,8 +8,8 @@ export default function Home() {
     <main>
       
     <Navbar />
-    
-    <Register />
+
+    <LoginGUI />
       
     </main>
   )
