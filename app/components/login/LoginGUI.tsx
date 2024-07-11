@@ -41,13 +41,6 @@ const Register = () => {
                         <div className="card bg-base-100 w-full max-w-sm shadow-2xl">
                             {showSignUp ? (
                                 <Signup
-                                    email={email}
-                                    setEmail={setEmail}
-                                    password={password}
-                                    setPassword={setPassword}
-                                    name={name}
-                                    setName={setName}
-                                    handleSignUp={handleSignUp}
                                     toggleForm={toggleForm}
                                 />
                             ) : (
