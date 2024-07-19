@@ -11,15 +11,54 @@ const Register = () => {
     const [name, setName] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const handleLogin = () => {
-        // Handle login logic using email and password state values
+    const handleLogin = async () => {
         console.log('Logging in with:', email, password);
-        setIsLoggedIn(true);
+
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success) {
+                    setIsLoggedIn(true);
+                } else {
+                    console.error('Login failed:', result.message);
+                }
+            } else {
+                console.error('Failed to login:', response.statusText);
+            }
+        } catch (error: any) {
+            console.error('Error logging in:', error.message);
+        }
     };
 
-    const handleSignUp = () => {
-        // Handle signup logic using name, email, and password state values
+    const handleSignUp = async () => {
         console.log('Signing up with:', name, email, password);
+
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, password }),
+            });
+
+            if (response.ok) {
+                console.log('User registered successfully');
+                toggleForm(); // Switch back to login form after successful signup
+            } else {
+                console.error('Failed to register user:', response.statusText);
+            }
+        } catch (error: any) {
+            console.error('Error registering user:', error.message);
+        }
     };
 
     const toggleForm = () => {

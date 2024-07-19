@@ -1,36 +1,30 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import sqlite from 'sqlite';
-import { open } from 'sqlite';
+import { db } from '../auth/index';
+import { usersTable } from '../auth/schema';
+import bcrypt from 'bcrypt';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Method Not Allowed' });
-    }
+const saltRounds = 10;
 
-    const { name, email, password } = req.body;
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method !== 'POST') {
+    res.status(405).end();
+    return;
+  }
 
-    try {
-        const db = await open({
-            filename: './database.sqlite',
-            driver: sqlite.Database,
-        });
+  const { name, email, password } = req.body;
 
-        await db.exec(`
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT,
-                email TEXT,
-                password TEXT
-            )
-        `);
+  try {
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        await db.run('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', name, email, password);
+    await db.insert(usersTable).values({
+      name,
+      email,
+      password: hashedPassword,
+    }).run();
 
-        await db.close();
-
-        return res.status(201).json({ message: 'User registered successfully' });
-    } catch (error: any) {
-        console.error('Error registering user:', error.message);
-        return res.status(500).json({ message: 'Internal Server Error' });
-    }
-}
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).json({ success: false, message: 'Error registering user' });
+  }
+};

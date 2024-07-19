@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { db } from '../api/auth/index';
+import { usersTable } from '../api/auth/schema';
+import bcrypt from 'bcrypt';
 
 interface SignupProps {
     toggleForm: () => void;
@@ -11,26 +14,24 @@ const Signup: React.FC<SignupProps> = ({ toggleForm }) => {
 
     const handleSignUp = async (event: React.FormEvent) => {
         event.preventDefault();
-        
-        console.log('Signup button pressed'); // Check if this log appears
+
+        console.log('Signup button pressed'); // Log when the button is pressed
 
         try {
-            const response = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name, email, password }),
-            });
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-            if (response.ok) {
-                console.log('User registered successfully');
-                toggleForm(); // Switch back to login form after successful signup
-            } else {
-                console.error('Failed to register user:', response.statusText);
-            }
-        } catch (error: any) {
-            console.error('Error registering user:', error.message);
+            // Insert the new user into the database
+            await db.insert(usersTable).values({
+                name,
+                email,
+                password: hashedPassword,
+            }).run();
+
+            console.log('User registered successfully');
+            // Optionally, you can redirect or show a success message here
+            toggleForm(); // Switch back to login form after successful signup
+        } catch (error) {
+            console.error('Error registering user:', error);
         }
     };
 
@@ -84,8 +85,11 @@ const Signup: React.FC<SignupProps> = ({ toggleForm }) => {
                 </p>
             </div>
             <div className="form-control mt-6">
-                <button type="submit" className="btn btn-primary">
-                    Sign Up
+                <button
+                    type="submit" // Ensure that clicking the button triggers form submission
+                    className="btn btn-primary"
+                >
+                    Hi Test NOTHING CHANGEd?
                 </button>
             </div>
         </form>
