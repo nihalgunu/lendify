@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import Login from './Login';
 import Signup from './Signup';
 
@@ -10,6 +11,8 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const router = useRouter(); // Initialize the useRouter hook
 
     const handleLogin = async () => {
         console.log('Logging in with:', email, password);
@@ -27,6 +30,7 @@ const Register = () => {
                 const result = await response.json();
                 if (result.success) {
                     setIsLoggedIn(true);
+                    router.push('/transactions'); // Redirect to /transactions
                 } else {
                     console.error('Login failed:', result.message);
                 }
@@ -70,7 +74,7 @@ const Register = () => {
             <div className="hero-content flex-col items-center">
                 {isLoggedIn ? (
                     <div className="text-center">
-                        <h1 className="text-5xl font-bold">Congrats, you logged in!</h1>
+                        <h1 className="text-5xl font-bold">Redirecting...</h1>
                     </div>
                 ) : (
                     <>
