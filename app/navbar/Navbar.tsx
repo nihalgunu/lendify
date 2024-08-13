@@ -19,7 +19,7 @@ const Navbar = () => {
           </button>
         </div>
         <div className="flex-none">
-                  <a className="btn btn-ghost text-lg">Lendify</a>
+                  <a href= "/transaction" className="btn btn-ghost text-lg">Lendify</a>
         </div>
         <div className="flex-none">
                   <a href= "/markets" className="btn btn-ghost text-lg">Markets</a>

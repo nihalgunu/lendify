@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Login from './Login';
 import Signup from './Signup';
+import { useRouter } from 'next/navigation';
 
 const Register = () => {
     const [showSignUp, setShowSignUp] = useState(false);
@@ -10,11 +11,16 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    
+    const router = useRouter(); // Initialize useRouter
 
     const handleLogin = () => {
         // Handle login logic using email and password state values
         console.log('Logging in with:', email, password);
         setIsLoggedIn(true);
+
+        // Redirect to /transaction after successful login
+        router.push('/transaction');
     };
 
     const handleSignUp = () => {
@@ -30,9 +36,7 @@ const Register = () => {
         <div className="hero bg-base-200 min-h-screen">
             <div className="hero-content flex-col items-center">
                 {isLoggedIn ? (
-                    <div className="text-center">
-                        <h1 className="text-5xl font-bold">Congrats, you logged in!</h1>
-                    </div>
+                    <div className="text-5xl font-bold">Redirecting...</div>
                 ) : (
                     <>
                         <div className="text-center mb-8">
